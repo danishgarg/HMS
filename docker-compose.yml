@@ -2,10 +2,8 @@ version: '3'
 services:
   zk:
     image: zookeeper
-    ports:
-      - "2181:2181"
   kafka:
-    image: danishgarg/kafka:1.1.0
+    image: danishgarg/kafka
     build:
       context: kafka
       dockerfile: Dockerfile

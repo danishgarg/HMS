@@ -1,4 +1,4 @@
-FROM openjdk:8-jre-alpine3.7
+FROM openjdk:8-jre-slim
 VOLUME /tmp
 ARG JAR_FILE
 ADD ${JAR_FILE} app.jar
