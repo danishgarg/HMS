@@ -1,0 +1,39 @@
+version: '3'
+services:
+  zk:
+    image: zookeeper
+    ports:
+      - "2181:2181"
+  kafka:
+    image: danishgarg/kafka:1.1.0
+    build:
+      context: kafka
+      dockerfile: Dockerfile
+    environment:
+      ZK: zk:2181
+    depends_on:
+      - zk
+  slot:
+    image: danishgarg/slotservice
+    environment:
+      - SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS=kafka:9092
+      - SPRING_CLOUD_STREAM_KAFKA_BINDER_ZKNODES=zk:2181
+      - SPRING_CLOUD_STREAM_KAFKA_STREAMS_BINDER_BROKERS=kafka:9092
+      - SPRING_CLOUD_STREAM_KAFKA_STREAMS_BINDER_ZKNODES=zk:2181
+    ports:
+      - "8080:8080"
+    depends_on:
+      - zk
+      - kafka
+  appointment:
+    image: danishgarg/appointmentservice
+    environment:
+      - SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS=kafka:9092
+      - SPRING_CLOUD_STREAM_KAFKA_BINDER_ZKNODES=zk:2181
+      - SPRING_CLOUD_STREAM_KAFKA_STREAMS_BINDER_BROKERS=kafka:9092
+      - SPRING_CLOUD_STREAM_KAFKA_STREAMS_BINDER_ZKNODES=zk:2181
+    ports:
+      - "8081:8080"
+    depends_on:
+      - zk
+      - kafka
